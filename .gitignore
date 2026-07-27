@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Environment/secrets
+.env
+.env.local
+
+# Model weights & large data (these get downloaded fresh, no need to version them)
+data/activation_cache/
+*.safetensors
+*.bin
+
+# Next.js frontend (once we get there)
+frontend/node_modules/
+frontend/.next/
+
+# OS junk
+.DS_Store
