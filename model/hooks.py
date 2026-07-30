@@ -5,7 +5,10 @@ def get_activations(model, text: str, layer: int = 6):
     tokens = model.to_tokens(text, prepend_bos=True, move_to_device=True)
 
     with torch.no_grad():
-        logits, cache = model.run_with_cache(tokens)
+        logits, cache = model.run_with_cache(
+            tokens,
+            names_filter=lambda name: name == f"blocks.{layer}.hook_resid_post"
+        )
 
     hook_name = f"blocks.{layer}.hook_resid_post"
     activations = cache[hook_name]

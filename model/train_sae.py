@@ -3,6 +3,8 @@ import torch.nn as nn
 import time
 from model.sae import SparseAutoencoder, compute_loss
 
+torch.manual_seed(42)
+
 def resample_dead_features(sae, dead_mask, input_dim):
     # dead_mask is a boolean tensor of shape [expansion_factor], True = dead
     num_dead = dead_mask.sum().item()
