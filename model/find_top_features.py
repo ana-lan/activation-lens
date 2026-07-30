@@ -1,0 +1,60 @@
+import torch
+from datasets import load_dataset
+from model.base_model import load_base_model
+from model.evaluate_sae import load_trained_sae
+
+def find_top_activating_examples(
+    feature_idx: int,
+    num_texts: int = 200,
+    layer: int = 6,
+    top_k: int = 10,
+    sae_weights_path: str = "model/sae_weights.pt"
+):
+    device = "cpu"
+    model = load_base_model()
+    model = model.to(device)
+
+    sae = load_trained_sae(sae_weights_path)
+    sae = sae.to(device)
+
+    dataset = load_dataset("Skylion007/openwebtext", split=f"train[:{num_texts}]")
+
+    results = []  # will hold (activation_value, text_snippet) pairs
+
+    for example in dataset:
+        text = example["text"]
+        if not text.strip():
+            continue
+
+        tokens = model.to_tokens(text, prepend_bos=True)
+        str_tokens = model.to_str_tokens(text, prepend_bos=True)  # human-readable version of each token
+
+        with torch.no_grad():
+            _, cache = model.run_with_cache(tokens)
+            acts = cache[f"blocks.{layer}.hook_resid_post"].squeeze(0)  # [position, 768]
+            features, _ = sae(acts)  # [position, 8192]
+
+        # 1. pull out just this one feature's values across all token positions
+        feature_values = features[:, feature_idx] 
+
+        # 2. find the position with the highest activation for this feature, in this text
+        max_val, max_pos = torch.max(feature_values, dim=0)  
+
+        # 3. grab a few tokens of context around that position
+        start = max(0, max_pos.item() - 5)
+        end = min(len(str_tokens), max_pos.item() + 5)
+        context = "".join(str_tokens[start:end])
+
+        results.append((max_val.item(), context))
+
+    # sort all results by activation value, highest first
+    results.sort(key=lambda x: x[0], reverse=True)
+
+    return results[:top_k]
+
+if __name__ == "__main__":
+    for feature_idx in [10, 100, 500, 1000, 4000]:
+        print(f"\n=== Feature {feature_idx} ===")
+        top_examples = find_top_activating_examples(feature_idx=feature_idx)
+        for val, context in top_examples:
+            print(f"Activation: {val:.3f} | Context: {context}")
