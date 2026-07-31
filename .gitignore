@@ -20,4 +20,4 @@ frontend/.next/
 # OS junk
 .DS_Store
 *.pt
-!results/*.pt
+!results/*.pt 
