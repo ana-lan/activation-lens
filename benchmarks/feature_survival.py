@@ -302,4 +302,4 @@ def compare_variants(sae_weights_path: str = "model/sae_weights.pt", layer: int 
         torch.save(result, f"results/{variant_name}_metrics.pt")
 
 if __name__ == "__main__":
-    compare_variants(num_texts=500)
+    compare_variants(num_texts=500, behavior_num_texts=500)
