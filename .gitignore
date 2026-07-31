@@ -21,3 +21,5 @@ frontend/.next/
 .DS_Store
 *.pt
 !results/*.pt 
+results/harm_feature_discovery.pt
+results/harm_feature_monitor_eval.pt
