@@ -1,0 +1,47 @@
+{
+    "precomputed": true,
+    "model": "gpt2 (GPT-2-small)",
+    "sae_layer": 6,
+    "generated_by": "model/find_top_features.py",
+    "limitations": "A curated, fixed set of features for reliable browser viewing. Clone the repository and run the FastAPI backend locally to browse any of the 8,192 features live.",
+    "examples": [
+      {
+        "feature_idx": 0,
+        "label": "Email addresses / contact handles",
+        "top_examples": [
+          { "activation": 11.907, "context": ", please contact licensing@dailycallernewsfoundation" },
+          { "activation": 9.089, "context": " Carter (@askjimmycarter) April" },
+          { "activation": 8.653, "context": " write to letters@theatlantic.com." },
+          { "activation": 8.117, "context": ": https://www.facebook.com/p" }
+        ]
+      },
+      {
+        "feature_idx": 500,
+        "label": "Quoted attribution (\"said X\")",
+        "top_examples": [
+          { "activation": 15.42, "context": " had been limited, one of the sources said," },
+          { "activation": 13.72, "context": " and Bastian Schweinsteiger, so it" },
+          { "activation": 13.58, "context": " judge, Shira Sheindlin, did not" },
+          { "activation": 12.98, "context": "The economy was already teetering before the latest" }
+        ]
+      },
+      {
+        "feature_idx": 10,
+        "label": "Surnames",
+        "top_examples": [
+          { "activation": 25.87, "context": "ll Be the Next Viacom (Video)" },
+          { "activation": 22.61, "context": " said, \u201cVirtually every time Harvey" },
+          { "activation": 19.26, "context": " around Ailene Voisin's Bee column" }
+        ]
+      },
+      {
+        "feature_idx": 100,
+        "label": "Legal/regulatory acts and agreements",
+        "top_examples": [
+          { "activation": 2.77, "context": ".S. Equal Employment Opportunity Commission after he was" },
+          { "activation": 2.61, "context": " in the 1990 Federal Employees Pay Comparability Act." },
+          { "activation": 2.05, "context": " under the Freedom of Information Act, lobbying groups for" }
+        ]
+      }
+    ]
+  }
