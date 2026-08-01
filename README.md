@@ -1,8 +1,10 @@
 # ActivationLens
 
-**Mechanistic interpretability meets inference optimization** — does making a model faster also make it harder to understand and monitor?
+**Mechanistic interpretability meets inference optimization on GPT-2-small.**
 
-[GitHub](https://github.com/ana-lan/activation-lens) · [Results](#results-at-a-glance) · [Result artifacts](#result-artifacts)
+![Python](https://img.shields.io/badge/python-3.11-blue) ![License](https://img.shields.io/badge/license-MIT-green) ![Status](https://img.shields.io/badge/status-research%20prototype-orange)
+
+[Live Demo](#) · [Results](#results-at-a-glance) · [Result Artifacts](#result-artifacts)
 
 ---
 
