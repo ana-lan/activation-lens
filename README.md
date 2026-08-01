@@ -1,3 +1,6 @@
+markdown
+<div align="center">
+
 # ActivationLens
 
 **Mechanistic interpretability meets inference optimization on GPT-2-small.**
@@ -5,6 +8,8 @@
 ![Python](https://img.shields.io/badge/python-3.11-blue) ![License](https://img.shields.io/badge/license-MIT-green) ![Status](https://img.shields.io/badge/status-research%20prototype-orange)
 
 [Live Demo](#) · [Results](#results-at-a-glance) · [Result Artifacts](#result-artifacts)
+
+</div>
 
 ---
 
