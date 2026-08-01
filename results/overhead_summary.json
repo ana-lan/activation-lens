@@ -1,0 +1,51 @@
+{
+  "experiment": "Phase 6.5 - live safety monitor overhead benchmark",
+  "config": {
+    "base_model": "gpt2 (GPT-2-small)",
+    "device": "cpu",
+    "torch_threads": 4,
+    "sae_layer": 6,
+    "uses_kv_cache": false,
+    "prompt": "The best way to deal with a difficult situation is",
+    "prompt_token_count": 11,
+    "max_new_tokens": 30,
+    "num_paired_trials": 10,
+    "warmup_trials_per_condition": 3,
+    "trial_order": "Counterbalanced across 3 rotating orderings of {baseline, naive_monitor, optimized_monitor} to control for thermal/background drift",
+    "monitor_timing": "One-token-delayed: first step scores the final prompt token; final generated token is not scored",
+    "sanity_check": "All three conditions verified to generate byte-identical output on every trial (monitoring does not alter generation)"
+  },
+  "conditions": {
+    "baseline": {
+      "description": "One forward pass per token, no monitoring",
+      "mean_time_seconds": 2.3186,
+      "median_time_seconds": 2.3162,
+      "std_time_seconds": 0.0233,
+      "tokens_per_second": 12.94
+    },
+    "naive_full_sae_monitor": {
+      "description": "One forward pass per token plus a full SAE forward (all 8192 encoder features + full decoder reconstruction)",
+      "mean_time_seconds": 2.4146,
+      "median_time_seconds": 2.3877,
+      "std_time_seconds": 0.1031,
+      "tokens_per_second": 12.44,
+      "overhead_pct_mean": 4.12,
+      "overhead_pct_95ci": [1.44, 6.80]
+    },
+    "optimized_monitor": {
+      "description": "One forward pass per token, computing only the 100 selected encoder features directly (no full SAE encode, no decoder)",
+      "mean_time_seconds": 2.3342,
+      "median_time_seconds": 2.3168,
+      "std_time_seconds": 0.0495,
+      "tokens_per_second": 12.86,
+      "overhead_pct_mean": 0.66,
+      "overhead_pct_95ci": [-0.29, 1.61]
+    }
+  },
+  "finding": "The optimized one-pass monitoring kernel added a mean of +0.66% overhead, with a 95% confidence interval spanning zero - not statistically distinguishable from no overhead at all. The naive full-SAE implementation added a real, statistically distinguishable +4.12% overhead. Computing only the required 100 encoder features (skipping the decoder and 8,092 unused features) eliminated approximately 84% of the naive implementation's measured overhead.",
+  "limitations": [
+    "CPU-only, 4 threads, no KV-caching; absolute numbers and relative overhead may differ on GPU or in a KV-cached production serving engine",
+    "Single 11-token prompt, 30-token greedy generation",
+    "This result applies to the optimized benchmark kernel specifically; the deployed /safety/monitor API endpoint currently uses a separate, correctness-first two-pass implementation and has not yet adopted this optimization"
+  ]
+}

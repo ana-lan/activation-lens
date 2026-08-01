@@ -1,0 +1,33 @@
+{
+  "experiment": "Phase 6.3 - live per-token/prefix conversion of the 100-feature safety probe",
+  "config": {
+    "base_probe": "100-feature regularized linear probe (see safety_probe_summary.json)",
+    "aggregation": "Running mean of the 100 selected features across generated/response tokens, re-scored after every token",
+    "min_prefix_tokens": 5,
+    "short_response_policy": "score_at_end (if a response ends before reaching min_prefix_tokens, its final available prefix is scored once)",
+    "bos_handling": "BOS token excluded from the running mean, matching the live monitor's generated-token-only window",
+    "calibration_split": "BeaverTails validation set (same discovery/validation/test split as the document-level probe)",
+    "final_holdout_offset": 3000,
+    "final_holdout_per_class": 500,
+    "note": "Calibration and evaluation both use the MAX prefix-level score per document, matching the live 'alert if any prefix crosses threshold' rule"
+  },
+  "results": {
+    "live_threshold": 0.3741,
+    "validation_precision_at_threshold": 0.5898,
+    "validation_recall_at_threshold": 0.9000,
+    "frozen_holdout_results": {
+      "auroc": 0.7579,
+      "auprc": 0.7333,
+      "precision": 0.5842,
+      "recall": 0.9160,
+      "false_positive_rate": 0.6520,
+      "confusion_matrix": [[174, 326], [42, 458]]
+    }
+  },
+  "finding": "Converting the document-level 100-feature probe into an online, per-token/prefix monitor produced AUROC 0.758 on a genuinely untouched holdout - a modest but real drop from the document-level 0.796, consistent with the added difficulty of scoring partial (prefix) text rather than complete responses.",
+  "limitations": [
+    "Calibrated on standalone BeaverTails responses; applied live to prompt-conditioned generation - a real, uncorrected distribution shift",
+    "This is online per-token monitoring with a post-generation trace UI; the browser receives the full trace after generation completes, not a streamed live view",
+    "65.2% false positive rate at this operating point is not acceptable for production deployment"
+  ]
+}

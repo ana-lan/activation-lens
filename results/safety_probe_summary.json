@@ -1,0 +1,75 @@
+{
+  "experiment": "Phase 6.2 - harm-associated SAE feature discovery and multi-feature probe",
+  "config": {
+    "dataset": "PKU-Alignment/BeaverTails",
+    "source_split": "30k_train",
+    "seed": 42,
+    "base_model": "gpt2 (GPT-2-small)",
+    "sae_layer": 6,
+    "aggregation": "mean_token_activation (document-level)",
+    "minimum_prevalence_filter": 0.05,
+    "splits": {
+      "discovery_per_class": 1000,
+      "validation_per_class": 500,
+      "test_per_class": 500,
+      "final_holdout_per_class": 500,
+      "final_holdout_offset": 2500,
+      "note": "Deduplicated by normalized response text before splitting; discovery/validation/test are non-overlapping"
+    }
+  },
+  "single_feature": {
+    "feature_id": 3149,
+    "selection_method": "Highest absolute Cohen's d on discovery split (finite, prevalence-filtered)",
+    "discovery_cohens_d": 0.6174,
+    "discovery_harm_prevalence": 0.995,
+    "discovery_safe_prevalence": 0.965,
+    "test_set_results": {
+      "auroc": 0.6528,
+      "auprc": 0.6517,
+      "precision": 0.5215,
+      "recall": 0.9200,
+      "f1": 0.6657,
+      "false_positive_rate": 0.8440,
+      "confusion_matrix": [[78, 422], [40, 460]],
+      "note": "Threshold selected on validation to maximize F1, not explicitly targeting a fixed recall"
+    },
+    "qualitative_finding": "Fires on ~99% of both harmful and safe held-out text (near-universal activation); top OpenWebText examples show generic formatting/structural text, not coherent harm semantics. Likely a broad, confounded feature rather than a clean harm detector."
+  },
+  "multi_feature_probe": {
+    "method": "L1-regularized logistic regression (saga solver, l1_ratio=1.0)",
+    "feature_selection": "Top N finite features by absolute Cohen's d on discovery split only; sanity-checked to reproduce feature #3149's known validation AUROC (0.6512) before trusting results",
+    "features_tested": [10, 25, 50, 100],
+    "best_config": {
+      "num_features": 100,
+      "nonzero_coefficients": 96,
+      "validation_auroc": 0.7903
+    },
+    "final_holdout_results": {
+      "holdout_offset": 2500,
+      "holdout_per_class": 500,
+      "auroc": 0.7962,
+      "auprc": 0.8013,
+      "precision": 0.6000,
+      "recall": 0.9120,
+      "f1": 0.7238,
+      "false_positive_rate": 0.6080,
+      "confusion_matrix": [[196, 304], [44, 456]],
+      "threshold_target_recall": 0.90
+    },
+    "top_weighted_features": [
+      {"feature_id": 4810, "weight": 0.3359},
+      {"feature_id": 6491, "weight": -0.3287},
+      {"feature_id": 5334, "weight": 0.2833},
+      {"feature_id": 910, "weight": 0.2610},
+      {"feature_id": 2328, "weight": 0.2573},
+      {"feature_id": 3149, "weight": 0.2538}
+    ]
+  },
+  "finding": "A 100-feature regularized linear probe improved AUROC from 0.653 (single feature) to 0.796 on a genuinely untouched holdout, reducing false positives by ~23.6 percentage points at comparable recall. This indicates harm-related signal is distributed across multiple SAE features rather than concentrated in one monosemantic feature.",
+  "limitations": [
+    "Evaluated on BeaverTails response text only; not tested against paraphrased, indirect, or fictional harmful content",
+    "No raw-residual or plain-text-classifier (e.g. TF-IDF) baseline evaluated",
+    "60.8% false positive rate on the final holdout is operationally unacceptable for a deployable monitor",
+    "96 of 100 selected coefficients are nonzero - a regularized probe, not a sparse one"
+  ]
+}

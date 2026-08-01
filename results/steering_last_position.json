@@ -1,0 +1,69 @@
+{
+  "experiment": "Phase 7, Stage 2 - last-position additive decoder-direction steering",
+  "config": {
+    "base_model": "gpt2 (GPT-2-small)",
+    "sae_layer": 6,
+    "sae_hook": "blocks.6.hook_resid_post",
+    "intervention": "modified_residual[:, -1, :] += strength * normalized_decoder_direction (last token position only)",
+    "strength_calibration": "strength = multiple * activation_reference * decoder_norm, where activation_reference is the feature's own p99 (or p95-of-active) activation on held-out text",
+    "strength_multiples_tested": [0, 3, 5, 10],
+    "neutral_prompts": [
+      "My favorite thing to do on the weekend is",
+      "Yesterday I went to the store and",
+      "The most important skill in life is",
+      "When I think about the future, I",
+      "Here is a short story about a dog:"
+    ],
+    "candidate_selection_data": "Skylion007/openwebtext, train[10000:10200] (held out from SAE training, but used for candidate selection - not the final untouched benchmark set)",
+    "zero_strength_sanity_check": "Verified exact token-ID match against ordinary greedy generation with no hook for every candidate"
+  },
+  "candidates": [
+    {
+      "feature_id": 3574,
+      "provisional_concept": "military / Naval vocabulary",
+      "decoder_norm": 1.0000,
+      "p99_activation": 1.0308,
+      "prevalence": 0.1684,
+      "activation_dose_response": "Confirmed: mean post-steering activation rose from ~0.08 (baseline) to ~2.6 (10x strength) across prompts",
+      "output_effect": "No military/Naval vocabulary appeared in generated text at any strength; outputs remained generic and largely unchanged in theme"
+    },
+    {
+      "feature_id": 754,
+      "provisional_concept": "books / reading",
+      "decoder_norm": 1.0000,
+      "p99_activation": 0.8959,
+      "prevalence": 0.1671,
+      "activation_dose_response": "Confirmed: mean post-steering activation rose from ~0.08 (baseline) to ~2.3 (10x strength) across prompts",
+      "output_effect": "No book/reading-related vocabulary appeared in generated text at any strength"
+    },
+    {
+      "feature_id": 1492,
+      "provisional_concept": "URL/contact structural tokens (fires on '.', '://', '@' within URLs, not on domain words)",
+      "decoder_norm": 1.0000,
+      "p99_activation": 0.9275,
+      "prevalence": 0.1785,
+      "activation_dose_response": "Confirmed: mean post-steering activation rose from ~0.04 (baseline) to ~2.3 (10x strength) across prompts",
+      "output_effect": "No URL-like structure appeared in generated text at strengths 3x-10x under last-position steering"
+    },
+    {
+      "feature_id": 727,
+      "provisional_concept": "lexical control: honorific ' Mr'",
+      "decoder_norm": 1.0000,
+      "p99_activation": 0.8888,
+      "prevalence": 0.2100,
+      "activation_dose_response": "Confirmed: mean post-steering activation rose from ~0.05 (baseline) to ~2.4 (10x strength) across prompts",
+      "output_effect": "The literal token 'Mr' did not appear more frequently in generated text at any strength"
+    },
+    {
+      "feature_id": 1046,
+      "provisional_concept": "lexical control: ' think' (invalidated - one prompt already contains 'think', confounding the control)",
+      "decoder_norm": 1.0000,
+      "p99_activation": 0.9362,
+      "prevalence": 0.1820,
+      "activation_dose_response": "Confirmed: mean post-steering activation rose from ~0.11 (baseline) to ~2.5 (10x strength) across prompts",
+      "output_effect": "Not usable as a clean control; excluded from final interpretation"
+    }
+  ],
+  "finding": "Across all 5 candidates - including clean, single-token lexical controls expected to be maximally steerable - additive decoder-direction steering reliably raised the targeted feature's activation, but no candidate produced its corresponding concept or token in generated output under last-position-only intervention.",
+  "next_step": "Feature #1046 dropped as an invalid control; #3574, #754, and #727 carried forward to persistent (all-position) steering with a matched random-direction control (see steering_persistent.json)"
+}

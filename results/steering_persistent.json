@@ -1,0 +1,54 @@
+{
+  "experiment": "Phase 7, final diagnostic - persistent (all-position) additive decoder-direction steering with matched random-direction control",
+  "config": {
+    "base_model": "gpt2 (GPT-2-small)",
+    "sae_layer": 6,
+    "sae_hook": "blocks.6.hook_resid_post",
+    "intervention": "modified_residual += strength * direction (applied to EVERY token position, not just the last)",
+    "rationale": "Anthropic's Golden Gate Claude clamps a feature's activation persistently; last-position-only steering (tested previously) is a weaker, non-persistent intervention. This diagnostic tests the more persistent, Anthropic-like policy.",
+    "strength_multiples_tested": [0, 3, 5, 10],
+    "neutral_prompts": [
+      "My favorite thing to do on the weekend is",
+      "Yesterday I went to the store and",
+      "The most important skill in life is",
+      "When I think about the future, I",
+      "Here is a short story about a dog:"
+    ],
+    "random_direction_control": {
+      "purpose": "Distinguishes direction-specific behavioral change from generic large-magnitude residual perturbation",
+      "generation_seed": 42,
+      "matched_to": "Feature #3574's activation reference scale",
+      "decoder_norm": 1.0000
+    }
+  },
+  "candidates_tested": [3574, 754, 727],
+  "candidate_labels": {
+    "3574": "military / Naval vocabulary",
+    "754": "books / reading",
+    "727": "lexical control: honorific ' Mr'"
+  },
+  "example_outputs_at_10x_strength": {
+    "feature_3574": {
+      "prompt": "Here is a short story about a dog:",
+      "completion": "A dog named \"The Dog\" was born in the United States in 1885. He was raised in a small ..."
+    },
+    "feature_754": {
+      "prompt": "Here is a short story about a dog:",
+      "completion": "A dog is a dog. It is a dog that is a dog. It is a dog that is a dog"
+    },
+    "feature_727": {
+      "prompt": "Here is a short story about a dog:",
+      "completion": "A dog was found dead in a house in the middle of the night. The dog was found dead in a house"
+    },
+    "random_direction": {
+      "prompt": "Here is a short story about a dog:",
+      "completion": "A dog is a dog. It is a dog that is a dog. It is a dog that is a dog"
+    }
+  },
+  "finding": "At matched strengths, all three target features (military, books, ' Mr') produced output degeneration (repetition, generic phrasing) qualitatively indistinguishable from the matched random unit-direction control. The random direction produced the same repetitive collapse pattern ('A dog is a dog. It is a dog that is a dog...') as one of the target features at 10x strength. No target feature showed concept-specific text that the random control did not also produce.",
+  "conclusion": "Within this model, SAE, layer (6), candidate set, prompt suite, and decoding policy, neither last-position nor persistent all-position additive decoder-direction steering produced behavioral effects distinguishable from generic residual perturbation. This is a controlled negative result, not a preliminary one: activation-level causal control of the encoded coordinate was confirmed, but did not translate into concept-level control of generated text.",
+  "open_hypotheses_untested": [
+    "GPT-2-small's SAE may lack sufficiently clean, monosemantic feature directions at this scale to support steering, even where reading-based interpretability looks reasonable",
+    "Layer 6 may not be the right intervention point for steering specifically, distinct from being a reasonable layer for reading/interpreting features"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "experiment": "Phase 5 - simulated quantization vs SAE feature interpretability",
+  "config": {
+    "base_model": "gpt2 (GPT-2-small)",
+    "sae_layer": 6,
+    "sae_hook": "blocks.6.hook_resid_post",
+    "sae_expansion_factor": 8192,
+    "quantization_method": "uniform min-max weight rounding (simulated, not a production backend)",
+    "dataset": "Skylion007/openwebtext",
+    "held_out_split": "train[10000:10500]",
+    "num_held_out_documents": 500,
+    "note": "Held out from SAE training data, which used train[:3000]"
+  },
+  "metrics_defined": {
+    "recall_at_5": "Fraction of baseline top-5 activating token positions retained in the quantized variant's top-5, counting only positive-activation matches",
+    "mean_correlation": "Mean per-feature Pearson correlation between baseline and quantized activations, streaming-computed across all 500 held-out documents",
+    "perplexity_ratio": "Quantized-variant perplexity divided by baseline perplexity on the same held-out set",
+    "top1_agreement": "Fraction of next-token predictions identical between baseline and quantized variant"
+  },
+  "results": {
+    "16bit": {
+      "perplexity_ratio": 1.0000,
+      "top1_agreement": 0.9992,
+      "mean_feature_correlation": 1.0000,
+      "recall_at_5": 0.9983,
+      "features_collapsed_frac": 0.0000
+    },
+    "8bit": {
+      "perplexity_ratio": 1.9916,
+      "top1_agreement": 0.5933,
+      "mean_feature_correlation": 0.6408,
+      "recall_at_5": 0.2944,
+      "features_collapsed_frac": 0.0005
+    },
+    "4bit": {
+      "perplexity_ratio": 32328.0810,
+      "top1_agreement": 0.0038,
+      "mean_feature_correlation": 0.0040,
+      "recall_at_5": 0.0001,
+      "features_collapsed_frac": 0.0000
+    }
+  },
+  "finding": "Under naive uniform weight rounding, behavioral quality (perplexity, top-1 agreement) and SAE feature interpretability (recall@5, correlation) degrade together, not independently. 16-bit is a clean negative control. 4-bit destroys the model outright rather than revealing a subtle interpretability-specific danger.",
+  "limitations": [
+    "Simulated quantization (uniform min-max weight rounding), not a production backend such as GPTQ/AWQ",
+    "Single model, single layer, single SAE training seed",
+    "No behavior-preserving quantization configuration was found or tested"
+  ]
+}
