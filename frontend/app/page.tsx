@@ -37,9 +37,9 @@ export default function LandingPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             <StatCard value="0.796" label="Safety-probe AUROC" sub="validated on untouched holdout" />
-            <StatCard value="+0.66%" label="Live monitor overhead" sub="not distinguishable from zero" />
+            <StatCard value="+0.66%" label="Optimized monitoring-kernel overhead" sub="not distinguishable from zero" />
             <StatCard value="8,192" label="SAE features" sub="trained from scratch on GPT-2-small" />
-            <StatCard value="500" label="Held-out documents" sub="per benchmark, zero overlap with training" />
+            <StatCard value="500" label="Quantization evaluation documents" sub="held out from SAE training" />
           </div>
         </div>
 
@@ -106,9 +106,8 @@ export default function LandingPage() {
         <ExperimentSection eyebrow="EXPERIMENT 3 · FEATURE STEERING" title="Golden Gate Claude-inspired steering">
           <p className="text-neutral-400 mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base">
             Additive decoder-direction steering reliably raised targeted SAE activations — confirming
-            causal control of the encoded coordinate. Tested across 8 candidates including clean lexical
-            controls and a matched random-direction control, under both last-position and persistent
-            intervention policies.
+            causal control of the encoded coordinate. Five semantically screened features were tested under last-position steering. 
+            Three finalists were tested under persistent all-position steering alongside one matched random unit direction.
           </p>
           <p className="text-neutral-500 text-xs sm:text-sm leading-relaxed">
             Target and random directions produced comparable output degeneration at matched strength.
