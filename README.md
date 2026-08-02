@@ -1,4 +1,3 @@
-markdown
 <div align="center">
 
 # ActivationLens
@@ -7,7 +6,7 @@ markdown
 
 ![Python](https://img.shields.io/badge/python-3.11-blue) ![License](https://img.shields.io/badge/license-MIT-green) ![Status](https://img.shields.io/badge/status-research%20prototype-orange)
 
-[Live Demo](#) · [Results](#results-at-a-glance) · [Result Artifacts](#result-artifacts)
+[Live Demo](https://activation-lens.vercel.app/) · [Results](#results-at-a-glance) · [Result Artifacts](#result-artifacts)
 
 </div>
 
@@ -173,6 +172,22 @@ Python · PyTorch · TransformerLens · scikit-learn · FastAPI · Next.js · Ty
 | Steering candidate screen | `steering/screen_candidates.py` | — | `results/steering_candidate_screen.pt` |
 
 Each committed JSON summary includes: configuration and random seed, dataset slices/splits used, model/layer/SAE dimensions, the reported metrics, relevant feature IDs and strengths, prompt/completion pairs (for steering), random-control outputs (for steering), and phase-specific limitations.
+
+<p align="center">
+  <a href="https://activation-lens.vercel.app/">
+    <img
+      src="docs/assets/activation-lens-dashboard.png"
+      alt="ActivationLens interactive dashboard"
+      width="900"
+    />
+  </a>
+</p>
+
+<p align="center">
+  <em>Interactive dashboard for feature exploration, safety-monitor traces, and benchmark results.</em>
+  <br />
+  <a href="https://activation-lens.vercel.app/">Explore the live demo →</a>
+</p>
 
 ## Reproducing this
 
