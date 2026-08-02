@@ -13,7 +13,7 @@ export default function LandingPage() {
             Open source · Benchmarked on GPT-2-small
           </span>
 
-          <h1 className="text-5xl font-bold leading-tight mb-6 max-w-3xl">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight mb-6 max-w-3xl">
             <span className="text-white">Does </span>
             <span className="text-indigo-400">quantization</span>
             <span className="text-white"> quietly break </span>
