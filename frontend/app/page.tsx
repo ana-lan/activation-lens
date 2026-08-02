@@ -5,15 +5,15 @@ export default function LandingPage() {
     <main className="min-h-screen bg-[#0a0810] text-neutral-300">
       <Nav />
 
-      <div className="max-w-5xl mx-auto px-6 pt-6">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-4 sm:pt-6">
         {/* Hero + stats — ONE bordered panel */}
-        <div className="rounded-2xl border border-neutral-800 bg-[#100c1a] px-6 sm:px-10 py-8 sm:py-12">
-          <span className="inline-flex items-center gap-2 text-xs text-neutral-400 border border-neutral-700 rounded-full px-3 py-1 mb-8">
-            <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
+        <div className="rounded-2xl border border-neutral-800 bg-[#100c1a] px-5 sm:px-10 py-8 sm:py-12">
+          <span className="inline-flex items-center gap-2 text-xs text-neutral-400 border border-neutral-700 rounded-full px-3 py-1 mb-6 sm:mb-8">
+            <span className="w-1.5 h-1.5 rounded-full bg-violet-400 shrink-0" />
             Open source · Benchmarked on GPT-2-small
           </span>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight mb-6 max-w-3xl">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight mb-5 sm:mb-6 max-w-3xl">
             <span className="text-white">Does </span>
             <span className="text-indigo-400">quantization</span>
             <span className="text-white"> quietly break </span>
@@ -21,12 +21,12 @@ export default function LandingPage() {
             <span className="text-white">?</span>
           </h1>
 
-          <p className="text-neutral-400 max-w-2xl mb-8 leading-relaxed">
+          <p className="text-neutral-400 max-w-2xl mb-6 sm:mb-8 leading-relaxed text-sm sm:text-base">
             A sparse autoencoder built from scratch on GPT-2-small, benchmarked against
             simulated quantization and converted into a live, low-overhead safety monitor.
           </p>
 
-          <div className="flex items-center gap-3 mb-12">
+          <div className="flex flex-wrap items-center gap-3 mb-8 sm:mb-12">
             <a href="/docs" className="px-4 py-2.5 rounded-lg bg-violet-950 border border-violet-800 text-violet-300 text-sm font-medium hover:bg-violet-900/50 transition-colors">
               Read the docs
             </a>
@@ -35,7 +35,7 @@ export default function LandingPage() {
             </a>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             <StatCard value="0.796" label="Safety-probe AUROC" sub="validated on untouched holdout" />
             <StatCard value="+0.66%" label="Live monitor overhead" sub="not distinguishable from zero" />
             <StatCard value="8,192" label="SAE features" sub="trained from scratch on GPT-2-small" />
@@ -45,13 +45,13 @@ export default function LandingPage() {
 
         {/* Experiment 1 */}
         <ExperimentSection eyebrow="EXPERIMENT 1 · QUANTIZATION" title="Does quantization break interpretability?">
-          <p className="text-neutral-400 mb-6 leading-relaxed">
+          <p className="text-neutral-400 mb-5 sm:mb-6 leading-relaxed text-sm sm:text-base">
             Trained a sparse autoencoder on GPT-2-small&apos;s layer-6 residual stream. Simulated 16/8/4-bit
             quantization via uniform weight rounding, evaluated on 500 held-out documents using three
             independent metrics: activating-position recall, per-feature correlation, and behavioral checks.
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6 sm:mb-8">
             <MiniStat value="1.99×" label="Perplexity ratio at 8-bit" />
             <MiniStat value="0.641" label="Feature correlation at 8-bit" />
             <MiniStat value="32,328×" label="Perplexity ratio at 4-bit" color="text-amber-400" />
@@ -66,7 +66,7 @@ export default function LandingPage() {
             ]}
           />
 
-          <p className="text-neutral-500 text-sm mt-6 leading-relaxed">
+          <p className="text-neutral-500 text-xs sm:text-sm mt-5 sm:mt-6 leading-relaxed">
             Behavior and interpretability degrade together, not independently. 16-bit is a clean negative
             control validating the pipeline; 4-bit destroys the model outright rather than revealing a
             subtle interpretability-specific danger.
@@ -75,13 +75,13 @@ export default function LandingPage() {
 
         {/* Experiment 2 */}
         <ExperimentSection eyebrow="EXPERIMENT 2 · SAFETY MONITOR" title="A live, low-overhead safety monitor">
-          <p className="text-neutral-400 mb-6 leading-relaxed">
+          <p className="text-neutral-400 mb-5 sm:mb-6 leading-relaxed text-sm sm:text-base">
             Searched all 8,192 SAE features against BeaverTails using a strict discovery/validation/test
             split. A single feature was weak and confounded; a 100-feature regularized probe was real,
             validated on a genuinely untouched holdout, and converted into a live per-token monitor.
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6 sm:mb-8">
             <MiniStat value="0.653 → 0.796" label="AUROC, single → 100-feature" />
             <MiniStat value="−23.6pp" label="False-positive rate reduction" />
             <MiniStat value="+0.66%" label="Optimized monitor overhead" />
@@ -95,7 +95,7 @@ export default function LandingPage() {
             ]}
           />
 
-          <p className="text-neutral-500 text-sm mt-6 leading-relaxed">
+          <p className="text-neutral-500 text-xs sm:text-sm mt-5 sm:mt-6 leading-relaxed">
             Computing only the 100 needed encoder features (skipping the full decoder and 8,092 unused
             features) cut monitoring overhead from a measurable +4.12% to +0.66% — not statistically
             distinguishable from zero.
@@ -104,26 +104,26 @@ export default function LandingPage() {
 
         {/* Experiment 3 */}
         <ExperimentSection eyebrow="EXPERIMENT 3 · FEATURE STEERING" title="Golden Gate Claude-inspired steering">
-          <p className="text-neutral-400 mb-6 leading-relaxed">
+          <p className="text-neutral-400 mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base">
             Additive decoder-direction steering reliably raised targeted SAE activations — confirming
             causal control of the encoded coordinate. Tested across 8 candidates including clean lexical
             controls and a matched random-direction control, under both last-position and persistent
             intervention policies.
           </p>
-          <p className="text-neutral-500 text-sm leading-relaxed">
+          <p className="text-neutral-500 text-xs sm:text-sm leading-relaxed">
             Target and random directions produced comparable output degeneration at matched strength.
             Reported as an honest, controlled negative result — not a hidden limitation.
           </p>
         </ExperimentSection>
 
         {/* Architecture */}
-        <div className="rounded-2xl border border-neutral-800 bg-[#100c1a] px-10 py-10 mt-6">
-          <h2 className="text-xs font-mono text-neutral-500 uppercase tracking-wider mb-6">Architecture &amp; stack</h2>
-          <pre className="text-xs text-neutral-400 overflow-x-auto font-mono leading-relaxed mb-6">
+        <div className="rounded-2xl border border-neutral-800 bg-[#100c1a] px-5 sm:px-10 py-6 sm:py-10 mt-4 sm:mt-6">
+          <h2 className="text-xs font-mono text-neutral-500 uppercase tracking-wider mb-5 sm:mb-6">Architecture &amp; stack</h2>
+          <pre className="text-[10px] sm:text-xs text-neutral-400 overflow-x-auto font-mono leading-relaxed mb-5 sm:mb-6">
 {`Base LLM (GPT-2-small, frozen)
          │
    Hook/Capture layer ──────→ Quantized variants (16/8/4-bit)
-         │                               │
+         │                              │
     SAE (trained once) ←────────────────┘
          │
   ┌──────┼──────────┬──────────────┐
@@ -138,13 +138,13 @@ Browser  Monitor    (Phase 7)   Layer`}
         </div>
 
         {/* Closing CTA */}
-        <div className="rounded-2xl border border-neutral-800 bg-[#100c1a] px-10 py-12 my-6 text-center">
-          <h2 className="text-2xl font-semibold text-white mb-3">Let&apos;s talk interpretability &amp; inference</h2>
-          <p className="text-neutral-400 mb-6 max-w-xl mx-auto">
+        <div className="rounded-2xl border border-neutral-800 bg-[#100c1a] px-5 sm:px-10 py-8 sm:py-12 my-4 sm:my-6 text-center">
+          <h2 className="text-xl sm:text-2xl font-semibold text-white mb-3">Let&apos;s talk interpretability &amp; inference</h2>
+          <p className="text-neutral-400 mb-6 max-w-xl mx-auto text-sm sm:text-base">
             ActivationLens is open source, built by Anagha — MS Computer Science, UT Dallas.
             Open to ML and SDE new-grad roles.
           </p>
-          <div className="flex items-center justify-center gap-3">
+          <div className="flex flex-wrap items-center justify-center gap-3">
             <a href="https://github.com/ana-lan/activation-lens" className="px-4 py-2.5 rounded-lg border border-neutral-700 text-neutral-300 text-sm font-medium hover:border-neutral-600 transition-colors">
               View on GitHub ↗
             </a>
@@ -163,8 +163,8 @@ Browser  Monitor    (Phase 7)   Layer`}
 
 function StatCard({ value, label, sub }: { value: string; label: string; sub: string }) {
   return (
-    <div className="rounded-xl border border-neutral-800 bg-[#0c0916] px-5 py-5">
-      <div className="text-3xl font-bold text-violet-400 mb-2">{value}</div>
+    <div className="rounded-xl border border-neutral-800 bg-[#0c0916] px-4 sm:px-5 py-4 sm:py-5">
+      <div className="text-2xl sm:text-3xl font-bold text-violet-400 mb-1.5 sm:mb-2 break-words">{value}</div>
       <div className="text-sm text-white font-medium mb-1">{label}</div>
       <div className="text-xs text-neutral-500 leading-snug">{sub}</div>
     </div>
@@ -173,8 +173,8 @@ function StatCard({ value, label, sub }: { value: string; label: string; sub: st
 
 function MiniStat({ value, label, color }: { value: string; label: string; color?: string }) {
   return (
-    <div className="rounded-xl border border-neutral-800 bg-[#0c0916] px-5 py-4">
-      <div className={`text-xl font-bold mb-1 ${color ?? "text-violet-400"}`}>{value}</div>
+    <div className="rounded-xl border border-neutral-800 bg-[#0c0916] px-4 sm:px-5 py-4">
+      <div className={`text-lg sm:text-xl font-bold mb-1 break-words ${color ?? "text-violet-400"}`}>{value}</div>
       <div className="text-xs text-neutral-500 leading-snug">{label}</div>
     </div>
   );
@@ -182,9 +182,9 @@ function MiniStat({ value, label, color }: { value: string; label: string; color
 
 function ExperimentSection({ eyebrow, title, children }: { eyebrow: string; title: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-2xl border border-neutral-800 bg-[#100c1a] px-10 py-10 mt-6">
+    <div className="rounded-2xl border border-neutral-800 bg-[#100c1a] px-5 sm:px-10 py-6 sm:py-10 mt-4 sm:mt-6">
       <div className="text-xs font-mono text-indigo-400 tracking-wider mb-3">{eyebrow}</div>
-      <h2 className="text-2xl font-semibold text-white mb-6">{title}</h2>
+      <h2 className="text-xl sm:text-2xl font-semibold text-white mb-5 sm:mb-6">{title}</h2>
       {children}
     </div>
   );
@@ -192,12 +192,12 @@ function ExperimentSection({ eyebrow, title, children }: { eyebrow: string; titl
 
 function ResultTable({ headers, rows }: { headers: string[]; rows: string[][] }) {
   return (
-    <div className="rounded-xl border border-neutral-800 overflow-hidden">
-      <table className="w-full text-sm font-mono">
+    <div className="rounded-xl border border-neutral-800 overflow-x-auto">
+      <table className="w-full text-xs sm:text-sm font-mono min-w-[480px]">
         <thead>
           <tr className="bg-[#0c0916]">
             {headers.map((h) => (
-              <th key={h} className="text-left px-4 py-2.5 text-neutral-500 font-normal text-xs border-b border-neutral-800">{h}</th>
+              <th key={h} className="text-left px-3 sm:px-4 py-2 sm:py-2.5 text-neutral-500 font-normal text-xs border-b border-neutral-800 whitespace-nowrap">{h}</th>
             ))}
           </tr>
         </thead>
@@ -205,7 +205,7 @@ function ResultTable({ headers, rows }: { headers: string[]; rows: string[][] })
           {rows.map((row, i) => (
             <tr key={i}>
               {row.map((cell, j) => (
-                <td key={j} className={`px-4 py-2.5 border-b border-neutral-900 last:border-0 ${j === 0 ? "text-neutral-200" : "text-neutral-400"}`}>{cell}</td>
+                <td key={j} className={`px-3 sm:px-4 py-2 sm:py-2.5 border-b border-neutral-900 last:border-0 whitespace-nowrap ${j === 0 ? "text-neutral-200" : "text-neutral-400"}`}>{cell}</td>
               ))}
             </tr>
           ))}
