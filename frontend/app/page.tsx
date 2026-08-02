@@ -7,7 +7,7 @@ export default function LandingPage() {
 
       <div className="max-w-5xl mx-auto px-6 pt-6">
         {/* Hero + stats — ONE bordered panel */}
-        <div className="rounded-2xl border border-neutral-800 bg-[#100c1a] px-10 py-12">
+        <div className="rounded-2xl border border-neutral-800 bg-[#100c1a] px-6 sm:px-10 py-8 sm:py-12">
           <span className="inline-flex items-center gap-2 text-xs text-neutral-400 border border-neutral-700 rounded-full px-3 py-1 mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
             Open source · Benchmarked on GPT-2-small
@@ -35,7 +35,7 @@ export default function LandingPage() {
             </a>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             <StatCard value="0.796" label="Safety-probe AUROC" sub="validated on untouched holdout" />
             <StatCard value="+0.66%" label="Live monitor overhead" sub="not distinguishable from zero" />
             <StatCard value="8,192" label="SAE features" sub="trained from scratch on GPT-2-small" />
@@ -51,7 +51,7 @@ export default function LandingPage() {
             independent metrics: activating-position recall, per-feature correlation, and behavioral checks.
           </p>
 
-          <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
             <MiniStat value="1.99×" label="Perplexity ratio at 8-bit" />
             <MiniStat value="0.641" label="Feature correlation at 8-bit" />
             <MiniStat value="32,328×" label="Perplexity ratio at 4-bit" color="text-amber-400" />
@@ -81,7 +81,7 @@ export default function LandingPage() {
             validated on a genuinely untouched holdout, and converted into a live per-token monitor.
           </p>
 
-          <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
             <MiniStat value="0.653 → 0.796" label="AUROC, single → 100-feature" />
             <MiniStat value="−23.6pp" label="False-positive rate reduction" />
             <MiniStat value="+0.66%" label="Optimized monitor overhead" />
