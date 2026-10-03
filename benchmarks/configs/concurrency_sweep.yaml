@@ -1,0 +1,27 @@
+test_name: concurrency_sweep
+description: >
+  Sequential and concurrent throughput/latency/memory sweep on plain vLLM,
+  no safety monitor attached. Baseline for the Week 3 four-condition
+  benchmark; validated in Week 1, Phases 1-7.
+
+environment:
+  vllm_version: "0.27.1"
+  torch_version: "2.13.0+cu130"
+  python_version: "3.12.13"
+  gpu: "NVIDIA L4"
+
+server:
+  url: "http://localhost:8000/v1/completions"
+  model: "gpt2"
+
+benchmark:
+  max_tokens: 30
+  warmup_requests: 2
+  concurrency_levels: [1, 5, 10, 20]
+  prompts:
+    - "The best way to deal with a difficult situation is"
+    - "In the middle of the night, she heard a"
+    - "The history of computing began with"
+    - "My favorite way to spend a weekend is"
+    - "The scientist carefully examined the"
+  repeats_per_prompt: 4
